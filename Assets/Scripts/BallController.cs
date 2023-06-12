@@ -1,55 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    public float speed;
+    [SerializeField]
+    private float speed;
 
-    public float minDirection = 0.5f;
+    [SerializeField]
+    private float minDirection = 0.5f;
+
+    [SerializeField]
+    private GameObject sparksVFX;
 
     private Vector3 direction;
     private Rigidbody ballRb;
-
     private bool stopped = false;
 
-    // Start is called before the first frame update
-    void Start()
+    public float Speed
     {
-        this.ballRb = GetComponent<Rigidbody>();
+        get { return speed; }
+        set { speed = value; }
     }
 
-    // Update is called once per frame
-    void Update()
+    public float MinDirection
     {
-        //transform.position += direction * speed * Time.deltaTime;
+        get { return minDirection; }
+        set { minDirection = value; }
+    }
+
+    private void Start()
+    {
+        ballRb = GetComponent<Rigidbody>();
     }
 
     private void FixedUpdate()
     {
         if (stopped)
-        {
             return;
-        }
-        this.ballRb.MovePosition(this.ballRb.position + direction * speed * Time.fixedDeltaTime);
+
+        ballRb.MovePosition(ballRb.position + direction * Speed * Time.fixedDeltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        bool hit = false;
+
         if (other.CompareTag("Wall"))
         {
             direction.z = -direction.z;
+            hit = true;
         }
 
         if (other.CompareTag("Racket"))
         {
             Vector3 newDirection = (transform.position - other.transform.position).normalized;
 
-            newDirection.x = Mathf.Sign(newDirection.x) * Mathf.Max(Mathf.Abs(newDirection.x), this.minDirection);
-            newDirection.z = Mathf.Sign(newDirection.x) * Mathf.Max(Mathf.Abs(newDirection.x), this.minDirection);
+            float randomFactor = Random.Range(0.8f, 1.2f); // Adjust the range for desired randomness
+
+            newDirection.x = Mathf.Sign(newDirection.x) * Mathf.Max(Mathf.Abs(newDirection.x), MinDirection) * randomFactor;
+            newDirection.z = Mathf.Sign(newDirection.z) * Mathf.Max(Mathf.Abs(newDirection.z), MinDirection) * randomFactor;
 
             direction = newDirection;
+            hit = true;
         }
+
+        if (hit)
+        {
+            GameObject sparks = Instantiate(sparksVFX, transform.position, transform.rotation);
+            Destroy(sparks, 2f);
+        }
+    }
+
+    public void Stop()
+    {
+        stopped = true;
+    }
+
+    public void Go()
+    {
+        stopped = false;
+        ChooseDirection();
     }
 
     private void ChooseDirection()
@@ -57,17 +86,6 @@ public class BallController : MonoBehaviour
         float signX = Mathf.Sign(Random.Range(-1f, 1f));
         float signZ = Mathf.Sign(Random.Range(-1f, 1f));
 
-        this.direction = new Vector3(0.5f * signX, 0, 0.5f * signZ);
-    }
-
-    public void Stop()
-    {
-        this.stopped = true;
-    }
-
-    public void Go()
-    {
-        this.stopped = false;
-        ChooseDirection();
+        direction = new Vector3(0.5f * signX, 0, 0.5f * signZ);
     }
 }
