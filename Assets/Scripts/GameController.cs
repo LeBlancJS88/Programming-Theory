@@ -1,83 +1,118 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class GameController : MonoBehaviour
 {
-    public TMP_Text scoreTextLeft;
-    public TMP_Text scoreTextRight;
+    [SerializeField]
+    private TMP_Text scoreTextLeft;
 
-    public Starter starter;
+    [SerializeField]
+    private TMP_Text scoreTextLeft2;
 
-    public GameObject ball;
+    [SerializeField]
+    private TMP_Text scoreTextRight;
+    
+    [SerializeField]
+    private TMP_Text scoreTextRight2;
+
+    [SerializeField]
+    private Starter starter;
+
+    [SerializeField]
+    private GameObject ball;
+
+    [SerializeField]
+    private AudioClip goalScoredSound;
 
     private bool started = false;
-
     private int scoreLeft;
     private int scoreRight;
-
     private Vector3 startingPosition;
-
     private BallController ballController;
+    private AudioSource audioSource;
 
-    // Start is called before the first frame update
     void Start()
     {
         startingPosition = ball.transform.position;
         ballController = ball.GetComponent<BallController>();
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (this.started)
+        if (started)
         {
             return;
         }
 
         if (Input.GetKey(KeyCode.Space))
         {
-            this.started = true;
-            this.starter.StartCountdown();
+            started = true;
+            starter.StartCountdown();
         }
     }
 
     public void StartGame()
     {
-        this.ballController.Go();
+        ballController.Go();
     }
 
     public void ScoreGoalLeft()
     {
-        scoreRight += 1;
+        PlayGoalScoredSound();
+        scoreRight ++;
         UpdateUI();
-        ResetBall();
+        StartCoroutine(ResetBallWithDelay());
+    }
+
+    public void ScoreBonusGoalLeft()
+    {
+        PlayGoalScoredSound();
+        scoreRight++;
+        UpdateUI();
     }
 
     public void ScoreGoalRight()
     {
-        scoreLeft += 1;
+        PlayGoalScoredSound();
+        scoreLeft ++;
         UpdateUI();
-        ResetBall();
+        StartCoroutine(ResetBallWithDelay());
     }
 
+    public void ScoreBonusGoalRight()
+    {
+        PlayGoalScoredSound();
+        scoreLeft++;
+        UpdateUI();
+    }
 
     private void UpdateUI()
     {
-        this.scoreTextLeft.text = this.scoreLeft.ToString();
-        this.scoreTextRight.text = this.scoreRight.ToString();
+        scoreTextLeft.text = scoreLeft.ToString();
+        scoreTextLeft2.text = scoreLeft.ToString();
+        scoreTextRight.text = scoreRight.ToString();
+        scoreTextRight2.text = scoreRight.ToString();
     }
 
-
-    private void ResetBall()
+    public void ResetBall()
     {
-        this.ballController.Stop();
-        this.ball.transform.position = this.startingPosition;
-        this.starter.StartCountdown();
+        ballController.Stop();
+        ballController.ResetSpeed();
+        ballController.ResetSize();
+        ball.transform.position = startingPosition;
+        starter.StartCountdown();
+    }
+
+    private void PlayGoalScoredSound()
+    {
+        if (goalScoredSound != null && audioSource != null)
+            audioSource.PlayOneShot(goalScoredSound);
+    }
+
+    private System.Collections.IEnumerator ResetBallWithDelay()
+    {
+        yield return new WaitForSeconds(4.0f); // Adjust the delay time as needed
+        ResetBall();
     }
 }
-    
-
-

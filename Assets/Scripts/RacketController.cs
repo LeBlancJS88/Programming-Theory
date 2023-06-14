@@ -1,37 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RacketController : MonoBehaviour
 {
-
     public float speed;
-
-    public KeyCode up;
-    public KeyCode down;
-
+    public KeyCode upKey;
+    public KeyCode downKey;
     public bool isPlayer = true;
-
     public float offset = 0.2f;
 
-    private Rigidbody playerRb;
-
+    private Rigidbody racketRb;
     private Transform ball;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        playerRb = GetComponent<Rigidbody>();
-
+        racketRb = GetComponent<Rigidbody>();
         ball = GameObject.FindGameObjectWithTag("Ball").transform;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (this.isPlayer)
+        if (isPlayer)
         {
-            MoveByPlayer();
+            MoveByInput();
         }
         else
         {
@@ -39,41 +29,18 @@ public class RacketController : MonoBehaviour
         }
     }
 
-    private void MoveByPlayer()
+    private void MoveByInput()
     {
-        bool pressedUp = Input.GetKey(this.up);
-
-        bool pressedDown = Input.GetKey(this.down);
-
-        if (pressedUp)
-        {
-            playerRb.velocity = Vector3.forward * speed;
-        }
-
-        if (pressedDown)
-        {
-            playerRb.velocity = Vector3.back * speed;
-        }
-
-        if (!pressedUp && !pressedDown)
-        {
-            playerRb.velocity = Vector3.zero;
-        }
+        float verticalInput = Input.GetAxis("Vertical");
+        Vector3 velocity = Vector3.forward * verticalInput * speed;
+        racketRb.velocity = velocity;
     }
 
     private void MoveByComputer()
     {
-        if (ball.position.z > transform.position.z + offset)
-        {
-            playerRb.velocity = Vector3.forward * speed;
-        }
-        else if (ball.position.z < transform.position.z - offset)
-        {
-            playerRb.velocity = Vector3.back * speed;
-        }
-        else
-        {
-            playerRb.velocity = Vector3.zero;
-        }
+        float targetZ = ball.position.z + (ball.position.z - transform.position.z > offset ? offset : -offset);
+        Vector3 targetPosition = new Vector3(transform.position.x, transform.position.y, targetZ);
+        Vector3 velocity = (targetPosition - transform.position).normalized * speed;
+        racketRb.velocity = velocity;
     }
 }

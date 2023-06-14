@@ -2,34 +2,54 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
-    [SerializeField]
-    private float speed;
+    // ENCAPSULATION:
+    // Private fields with serialized attributes for controlled access
+    [SerializeField] private float initialSpeed = 20f; // Initial speed of the ball
 
-    [SerializeField]
-    private float minDirection = 0.5f;
+    private float currentSpeed; // Current speed of the ball
 
-    [SerializeField]
-    private GameObject sparksVFX;
+    [SerializeField] private float minDirection = 0.5f;
 
+    [SerializeField] private GameObject sparksVFX;
+
+    [SerializeField] private AudioClip[] collisionSounds;
+
+    // ABSTRACTION:
+    // Private fields to hide internal implementation details
     private Vector3 direction;
     private Rigidbody ballRb;
     private bool stopped = false;
+    private AudioSource audioSource;
 
-    public float Speed
-    {
-        get { return speed; }
-        set { speed = value; }
-    }
+    // Delegate function for adjusting the speed
+    private delegate void SpeedAdjustmentDelegate(float speedMultiplier);
+    private SpeedAdjustmentDelegate speedAdjustmentFunc;
 
-    public float MinDirection
+    protected float MinDirection
     {
         get { return minDirection; }
         set { minDirection = value; }
     }
 
-    private void Start()
+    // POLYMORPHISM:
+    // Virtual methods that can be overridden by derived classes
+    protected virtual void Start()
     {
         ballRb = GetComponent<Rigidbody>();
+        audioSource = gameObject.AddComponent<AudioSource>();
+        currentSpeed = initialSpeed;
+    }
+
+    public float GetCurrentSpeed()
+    {
+        return currentSpeed;
+    }
+
+    public void SetCurrentSpeed(float speed)
+    {
+        currentSpeed = speed;
+        Vector3 velocity = ballRb.velocity.normalized * currentSpeed;
+        ballRb.velocity = velocity;
     }
 
     private void FixedUpdate()
@@ -37,10 +57,37 @@ public class BallController : MonoBehaviour
         if (stopped)
             return;
 
-        ballRb.MovePosition(ballRb.position + direction * Speed * Time.fixedDeltaTime);
+        ballRb.MovePosition(ballRb.position + direction * currentSpeed * Time.fixedDeltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void ApplySpeedMultiplier(float speedMultiplier)
+    {
+        currentSpeed *= speedMultiplier;
+        // You can add additional logic here to clamp the speed within a desired range if needed
+    }
+
+    public void ResetSpeed()
+    {
+        currentSpeed = initialSpeed;
+    }
+
+    public void ApplyGiantMultiplier(float giantMultiplier)
+    {
+        transform.localScale *= giantMultiplier;
+    }
+
+    public void ApplyShrinkDividend(float shrinkDividend)
+    {
+        transform.localScale /= shrinkDividend;
+    }
+
+    public void ResetSize()
+    {
+        transform.localScale = Vector3.one;
+    }
+
+
+    protected virtual void OnTriggerEnter(Collider other)
     {
         bool hit = false;
 
@@ -48,6 +95,8 @@ public class BallController : MonoBehaviour
         {
             direction.z = -direction.z;
             hit = true;
+
+            PlayCollisionSound(1);
         }
 
         if (other.CompareTag("Racket"))
@@ -61,6 +110,8 @@ public class BallController : MonoBehaviour
 
             direction = newDirection;
             hit = true;
+
+            PlayCollisionSound(0);
         }
 
         if (hit)
@@ -70,6 +121,8 @@ public class BallController : MonoBehaviour
         }
     }
 
+    // ABSTRACTION:
+    // Public methods that provide a high-level interface to control behavior
     public void Stop()
     {
         stopped = true;
@@ -81,11 +134,24 @@ public class BallController : MonoBehaviour
         ChooseDirection();
     }
 
+    // ABSTRACTION:
+    // Private method for internal implementation details
     private void ChooseDirection()
     {
         float signX = Mathf.Sign(Random.Range(-1f, 1f));
         float signZ = Mathf.Sign(Random.Range(-1f, 1f));
 
         direction = new Vector3(0.5f * signX, 0, 0.5f * signZ);
+    }
+
+    // ABSTRACTION:
+    // Private method for internal implementation details
+    private void PlayCollisionSound(int index)
+    {
+        if (collisionSounds.Length == 0)
+            return;
+
+        if (index >= 0 && index < collisionSounds.Length)
+            audioSource.PlayOneShot(collisionSounds[index]);
     }
 }
