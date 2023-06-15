@@ -19,7 +19,7 @@ public class Starter : MonoBehaviour
     {
         gameController = FindObjectOfType<GameController>(); // Encapsulation: Accessing a private field through a method
         animator = GetComponent<Animator>(); // Encapsulation: Accessing a private field through a method
-        audioSource = gameObject.AddComponent<AudioSource>(); // Encapsulation: Accessing a private field through a method
+        audioSource = gameObject.GetComponent<AudioSource>(); // Encapsulation: Accessing a private field through a method
     }
 
     public void StartCountdown()
