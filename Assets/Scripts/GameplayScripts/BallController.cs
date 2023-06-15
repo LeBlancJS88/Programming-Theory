@@ -36,7 +36,7 @@ public class BallController : MonoBehaviour
     protected virtual void Start()
     {
         ballRb = GetComponent<Rigidbody>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource = gameObject.GetComponent<AudioSource>();
         currentSpeed = initialSpeed;
     }
 

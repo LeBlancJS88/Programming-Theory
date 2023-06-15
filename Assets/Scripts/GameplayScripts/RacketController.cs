@@ -15,13 +15,34 @@ public class RacketController : MonoBehaviour
     {
         racketRb = GetComponent<Rigidbody>();
         ball = GameObject.FindGameObjectWithTag("Ball").transform;
+
+        // Check if this is Player 1 or Player 2 and set the isPlayer variable accordingly
+        if (gameObject.name == "Player")
+        {
+            isPlayer = true;
+        }
+        else if (gameObject.name == "PlayerTwo")
+        {
+            isPlayer = true;
+        }
+        else
+        {
+            isPlayer = false;
+        }
     }
 
     private void Update()
     {
         if (isPlayer)
         {
-            MoveByInput();
+            if (gameObject.name == "Player")
+            {
+                MovePlayerByInput();
+            }
+            else if (gameObject.name == "PlayerTwo")
+            {
+                MovePlayerTwoByInput();
+            }
         }
         else
         {
@@ -29,9 +50,16 @@ public class RacketController : MonoBehaviour
         }
     }
 
-    private void MoveByInput()
+    private void MovePlayerByInput()
     {
         float verticalInput = Input.GetAxis("Vertical");
+        Vector3 velocity = Vector3.forward * verticalInput * speed;
+        racketRb.velocity = velocity;
+    }
+
+    private void MovePlayerTwoByInput()
+    {
+        float verticalInput = Input.GetAxis("Vertical2");
         Vector3 velocity = Vector3.forward * verticalInput * speed;
         racketRb.velocity = velocity;
     }
