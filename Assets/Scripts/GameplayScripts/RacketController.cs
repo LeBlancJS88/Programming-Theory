@@ -12,7 +12,7 @@ public class RacketController : MonoBehaviour
     private KeyCode downKey;  // Encapsulation - downKey field is encapsulated and made private with a SerializeField attribute
 
     [SerializeField]
-    internal bool isPlayer = true;  // Encapsulation - isPlayer field is encapsulated and made internal with a SerializeField attribute
+    internal bool isPlayer = false;  // Encapsulation - isPlayer field is encapsulated and made internal with a SerializeField attribute
 
     [SerializeField]
     private float offset = 0.2f;  // Encapsulation - offset field is encapsulated and made private with a SerializeField attribute
@@ -29,11 +29,11 @@ public class RacketController : MonoBehaviour
         // Check if this is Player 1 or Player 2 and set the isPlayer variable accordingly
         if (gameObject.name == "Player" || gameObject.name == "PlayerTwo")
         {
-            isPlayer = true;
+            isPlayer = false;
         }
         else
         {
-            isPlayer = false;
+            isPlayer = true;
         }
     }
 

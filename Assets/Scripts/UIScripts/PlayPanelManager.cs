@@ -10,9 +10,6 @@ public class PlayPanelManager : MonoBehaviour
 
     private void Start()
     {
-        player1Toggle.isOn = player1.isPlayer; // Encapsulation: Setting the initial state of the player 1 toggle based on the isPlayer property
-        player2Toggle.isOn = player2.isPlayer; // Encapsulation: Setting the initial state of the player 2 toggle based on the isPlayer property
-
         player1Toggle.onValueChanged.AddListener(OnPlayer1ToggleValueChanged); // Abstraction: Registering a listener for the player 1 toggle value change event
         player2Toggle.onValueChanged.AddListener(OnPlayer2ToggleValueChanged); // Abstraction: Registering a listener for the player 2 toggle value change event
     }
