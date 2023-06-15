@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Starter : MonoBehaviour
 {
-    private GameController gameController;
-    private Animator animator;
+    private GameController gameController; // Encapsulation: Private field encapsulated within the class
+    private Animator animator; // Encapsulation: Private field encapsulated within the class
 
     [SerializeField]
-    private AudioClip countdownSoundEffect;
+    private AudioClip countdownSoundEffect; // Encapsulation: Private field encapsulated within the class
 
-    private AudioSource audioSource;
+    private AudioSource audioSource; // Encapsulation: Private field encapsulated within the class
 
     private void Start()
     {
@@ -17,23 +17,23 @@ public class Starter : MonoBehaviour
 
     private void InitializeComponents()
     {
-        gameController = FindObjectOfType<GameController>();
-        animator = GetComponent<Animator>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        gameController = FindObjectOfType<GameController>(); // Encapsulation: Accessing a private field through a method
+        animator = GetComponent<Animator>(); // Encapsulation: Accessing a private field through a method
+        audioSource = gameObject.AddComponent<AudioSource>(); // Encapsulation: Accessing a private field through a method
     }
 
     public void StartCountdown()
     {
         if (countdownSoundEffect != null && audioSource != null)
         {
-            audioSource.PlayOneShot(countdownSoundEffect);
+            audioSource.PlayOneShot(countdownSoundEffect); // Encapsulation: Invoking a method on a private field
         }
 
-        animator.SetTrigger("StartCountdown");
+        animator.SetTrigger("StartCountdown"); // Encapsulation: Invoking a method on a private field
     }
 
     public void StartGame()
     {
-        gameController.StartGame();
+        gameController.StartGame(); // Encapsulation: Invoking a method on a private field
     }
 }

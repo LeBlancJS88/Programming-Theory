@@ -6,11 +6,11 @@ using UnityEngine.SceneManagement;
 
     public class ButtonHandler : MonoBehaviour
 {
-    public GameObject optionsMenu;
-    public GameObject generalEffectsPanel;
-    public GameObject audioVolumePanel;
-    public GameObject graphicSettingsPanel;
-    public GameObject keybindingsPanel;
+    [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private GameObject generalEffectsPanel;
+    [SerializeField] private GameObject audioVolumePanel;
+    [SerializeField] private GameObject graphicSettingsPanel;
+    [SerializeField] private GameObject keybindingsPanel;
 
     private void Update()
     {

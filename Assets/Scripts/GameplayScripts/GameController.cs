@@ -4,41 +4,41 @@ using TMPro;
 public class GameController : MonoBehaviour
 {
     [SerializeField]
-    private TMP_Text scoreTextLeft;
+    private TMP_Text scoreTextLeft; // Encapsulation: Private field with serialized attribute for controlled access
 
     [SerializeField]
-    private TMP_Text scoreTextLeft2;
+    private TMP_Text scoreTextLeft2; // Encapsulation: Private field with serialized attribute for controlled access
 
     [SerializeField]
-    private TMP_Text scoreTextRight;
-    
-    [SerializeField]
-    private TMP_Text scoreTextRight2;
+    private TMP_Text scoreTextRight; // Encapsulation: Private field with serialized attribute for controlled access
 
     [SerializeField]
-    private Starter starter;
+    private TMP_Text scoreTextRight2; // Encapsulation: Private field with serialized attribute for controlled access
 
     [SerializeField]
-    private GameObject ball;
+    private Starter starter; // Encapsulation: Private field with serialized attribute for controlled access
 
     [SerializeField]
-    private AudioClip goalScoredSound;
+    private GameObject ball; // Encapsulation: Private field with serialized attribute for controlled access
 
-    private bool started = false;
-    private int scoreLeft;
-    private int scoreRight;
-    private Vector3 startingPosition;
-    private BallController ballController;
-    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip goalScoredSound; // Encapsulation: Private field with serialized attribute for controlled access
 
-    void Start()
+    private bool started = false; // Encapsulation: Private field for controlled access
+    private int scoreLeft; // Encapsulation: Private field for controlled access
+    private int scoreRight; // Encapsulation: Private field for controlled access
+    private Vector3 startingPosition; // Encapsulation: Private field for controlled access
+    private BallController ballController; // Encapsulation: Private field for controlled access
+    private AudioSource audioSource; // Encapsulation: Private field for controlled access
+
+    void Start() // Abstraction: Start method for initialization
     {
-        startingPosition = ball.transform.position;
-        ballController = ball.GetComponent<BallController>();
-        audioSource = gameObject.AddComponent<AudioSource>();
+        startingPosition = ball.transform.position; // Abstraction: Initializing the starting position
+        ballController = ball.GetComponent<BallController>(); // Abstraction: Retrieving BallController component
+        audioSource = gameObject.AddComponent<AudioSource>(); // Abstraction: Adding AudioSource component
     }
 
-    void Update()
+    void Update() // Abstraction: Update method for input handling and game state
     {
         if (started)
         {
@@ -52,42 +52,42 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void StartGame() // Abstraction: Public method for starting the game
     {
         ballController.Go();
     }
 
-    public void ScoreGoalLeft()
+    public void ScoreGoalLeft() // Abstraction: Public method for scoring a goal on the left side
     {
         PlayGoalScoredSound();
-        scoreRight ++;
+        scoreRight++;
         UpdateUI();
         StartCoroutine(ResetBallWithDelay());
     }
 
-    public void ScoreBonusGoalLeft()
+    public void ScoreBonusGoalLeft() // Abstraction: Public method for scoring a bonus goal on the left side
     {
         PlayGoalScoredSound();
         scoreRight++;
         UpdateUI();
     }
 
-    public void ScoreGoalRight()
+    public void ScoreGoalRight() // Abstraction: Public method for scoring a goal on the right side
     {
         PlayGoalScoredSound();
-        scoreLeft ++;
+        scoreLeft++;
         UpdateUI();
         StartCoroutine(ResetBallWithDelay());
     }
 
-    public void ScoreBonusGoalRight()
+    public void ScoreBonusGoalRight() // Abstraction: Public method for scoring a bonus goal on the right side
     {
         PlayGoalScoredSound();
         scoreLeft++;
         UpdateUI();
     }
 
-    private void UpdateUI()
+    private void UpdateUI() // Abstraction: Private method for updating the user interface
     {
         scoreTextLeft.text = scoreLeft.ToString();
         scoreTextLeft2.text = scoreLeft.ToString();
@@ -95,7 +95,7 @@ public class GameController : MonoBehaviour
         scoreTextRight2.text = scoreRight.ToString();
     }
 
-    public void ResetBall()
+    public void ResetBall() // Abstraction: Public method for resetting the ball
     {
         ballController.Stop();
         ballController.ResetSpeed();
@@ -104,13 +104,13 @@ public class GameController : MonoBehaviour
         starter.StartCountdown();
     }
 
-    private void PlayGoalScoredSound()
+    private void PlayGoalScoredSound() // Abstraction: Private method for playing the goal scored sound
     {
         if (goalScoredSound != null && audioSource != null)
             audioSource.PlayOneShot(goalScoredSound);
     }
 
-    private System.Collections.IEnumerator ResetBallWithDelay()
+    private System.Collections.IEnumerator ResetBallWithDelay() // Abstraction: Private method for resetting the ball with a delay
     {
         yield return new WaitForSeconds(4.0f); // Adjust the delay time as needed
         ResetBall();

@@ -25,6 +25,8 @@ public class BallController : MonoBehaviour
     private delegate void SpeedAdjustmentDelegate(float speedMultiplier);
     private SpeedAdjustmentDelegate speedAdjustmentFunc;
 
+    // Encapsulation and Abstraction:
+    // Getter and Setter for the minDirection property
     protected float MinDirection
     {
         get { return minDirection; }
@@ -52,6 +54,8 @@ public class BallController : MonoBehaviour
         ballRb.velocity = velocity;
     }
 
+    // Encapsulation and Abstraction:
+    // FixedUpdate method for physics-related logic
     private void FixedUpdate()
     {
         if (stopped)
@@ -86,7 +90,8 @@ public class BallController : MonoBehaviour
         transform.localScale = Vector3.one;
     }
 
-
+    // ABSTRACTION:
+    // Protected method that can be overridden by derived classes
     protected virtual void OnTriggerEnter(Collider other)
     {
         bool hit = false;
